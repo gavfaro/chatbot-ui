@@ -13,6 +13,10 @@ export interface ChatBody {
   key: string;
   prompt: string;
   temperature: number;
+  top_p: number;
+  frequency_penalty: number;
+  presence_penalty: number;
+  seed: number | null;
 }
 
 export interface Conversation {
@@ -22,5 +26,9 @@ export interface Conversation {
   model: OpenAIModel;
   prompt: string;
   temperature: number;
+  top_p: number;
+  frequency_penalty: number;
+  presence_penalty: number;
+  seed: number | null;
   folderId: string | null;
 }

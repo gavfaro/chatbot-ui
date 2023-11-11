@@ -29,10 +29,13 @@ import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
 import { ChatLoader } from './ChatLoader';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
+import { FrequencyPenaltySlider } from './FrequencyPenalty';
+import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
-import { MemoizedChatMessage } from './MemoizedChatMessage';
+import { TopPSlider } from './TopP';
+import { PresencePenaltySlider } from './PresencePenalty';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -99,6 +102,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           key: apiKey,
           prompt: updatedConversation.prompt,
           temperature: updatedConversation.temperature,
+          top_p: updatedConversation.top_p,
+          frequency_penalty: updatedConversation.frequency_penalty,
+          presence_penalty: updatedConversation.presence_penalty,
+          seed: updatedConversation.seed,
         };
         const endpoint = getEndpoint(plugin);
         let body;
@@ -405,12 +412,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Chatbot UI'
+                      null
                     )}
                   </div>
 
                   {models.length > 0 && (
-                    <div className="flex h-full flex-col space-y-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-600">
+                    <div className="flex h-full flex-col space-y-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-600 overflow-y-auto max-h-[50vh]">
                       <ModelSelect />
 
                       <SystemPrompt
@@ -433,6 +440,36 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                           })
                         }
                       />
+
+                      <TopPSlider
+                        label={t('Top_p')}
+                        onChangeTopP={(top_p) =>
+                          handleUpdateConversation(selectedConversation, {
+                            key: 'top_p',
+                            value: top_p,
+                          })
+                        }
+                      />
+
+                      <FrequencyPenaltySlider
+                        label={t('Frequency_penalty')}
+                        onChangeFrequencyPenalty={(frequency_penalty) =>
+                          handleUpdateConversation(selectedConversation, {
+                            key: 'frequency_penalty',
+                            value: frequency_penalty,
+                          })
+                        }
+                      />
+
+                      <PresencePenaltySlider
+                        label={t('Presence_penalty')}
+                        onChangePresencePenalty={(presence_penalty) =>
+                          handleUpdateConversation(selectedConversation, {
+                            key: 'presence_penalty',
+                            value: presence_penalty,
+                          })
+                        }
+                      />
                     </div>
                   )}
                 </div>
@@ -441,7 +478,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               <>
                 <div className="sticky top-0 z-10 flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
                   {t('Model')}: {selectedConversation?.model.name} | {t('Temp')}
-                  : {selectedConversation?.temperature} |
+                  : {selectedConversation?.temperature} | {t('Top_p')}
+                  : {selectedConversation?.top_p} | {t('FP')}
+                  : {selectedConversation?.frequency_penalty} | {t('PP')}
+                  : {selectedConversation?.presence_penalty}
                   <button
                     className="ml-2 cursor-pointer hover:opacity-50"
                     onClick={handleSettings}

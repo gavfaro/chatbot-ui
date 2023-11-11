@@ -2,31 +2,31 @@ import { FC, useContext, useState } from 'react';
 
 import { useTranslation } from 'next-i18next';
 
-import { DEFAULT_TEMPERATURE } from '@/utils/app/const';
+import { DEFAULT_TOPP } from '@/utils/app/const';
 
 import HomeContext from '@/pages/api/home/home.context';
 
 interface Props {
   label: string;
-  onChangeTemperature: (temperature: number) => void;
+  onChangeTopP: (topP: number) => void;
 }
 
-export const TemperatureSlider: FC<Props> = ({
+export const TopPSlider: FC<Props> = ({
   label,
-  onChangeTemperature,
+  onChangeTopP,
 }) => {
   const {
     state: { conversations },
   } = useContext(HomeContext);
   const lastConversation = conversations[conversations.length - 1];
-  const [temperature, setTemperature] = useState(
-    lastConversation?.temperature ?? DEFAULT_TEMPERATURE,
+  const [topP, setTopP] = useState(
+    lastConversation?.top_p ?? DEFAULT_TOPP,
   );
   const { t } = useTranslation('chat');
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(event.target.value);
-    setTemperature(newValue);
-    onChangeTemperature(newValue);
+    setTopP(newValue);
+    onChangeTopP(newValue);
   };
 
   return (
@@ -36,11 +36,11 @@ export const TemperatureSlider: FC<Props> = ({
       </label>
       <span className="text-[12px] text-black/50 dark:text-white/50 text-sm">
         {t(
-          'Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.',
+          'An alternative to sampling with topP, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.',
         )}
       </span>
       <span className="mt-2 mb-1 text-center text-neutral-900 dark:text-neutral-100">
-        {temperature.toFixed(1)}
+        {topP.toFixed(1)}
       </span>
       <input
         className="cursor-pointer"
@@ -48,7 +48,7 @@ export const TemperatureSlider: FC<Props> = ({
         min={0}
         max={1}
         step={0.1}
-        value={temperature}
+        value={topP}
         onChange={handleChange}
       />
      

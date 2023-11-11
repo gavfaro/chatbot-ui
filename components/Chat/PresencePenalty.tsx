@@ -2,31 +2,31 @@ import { FC, useContext, useState } from 'react';
 
 import { useTranslation } from 'next-i18next';
 
-import { DEFAULT_TEMPERATURE } from '@/utils/app/const';
+import { DEFAULT_PRESENCE_PENALTY } from '@/utils/app/const';
 
 import HomeContext from '@/pages/api/home/home.context';
 
 interface Props {
   label: string;
-  onChangeTemperature: (temperature: number) => void;
+  onChangePresencePenalty: (presencePenalty: number) => void;
 }
 
-export const TemperatureSlider: FC<Props> = ({
+export const PresencePenaltySlider: FC<Props> = ({
   label,
-  onChangeTemperature,
+  onChangePresencePenalty,
 }) => {
   const {
     state: { conversations },
   } = useContext(HomeContext);
   const lastConversation = conversations[conversations.length - 1];
-  const [temperature, setTemperature] = useState(
-    lastConversation?.temperature ?? DEFAULT_TEMPERATURE,
+  const [presencePenalty, setPresencePenalty] = useState(
+    lastConversation?.presence_penalty ?? DEFAULT_PRESENCE_PENALTY,
   );
   const { t } = useTranslation('chat');
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(event.target.value);
-    setTemperature(newValue);
-    onChangeTemperature(newValue);
+    setPresencePenalty(newValue);
+    onChangePresencePenalty(newValue);
   };
 
   return (
@@ -36,19 +36,19 @@ export const TemperatureSlider: FC<Props> = ({
       </label>
       <span className="text-[12px] text-black/50 dark:text-white/50 text-sm">
         {t(
-          'Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.',
+          `Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.`,
         )}
       </span>
       <span className="mt-2 mb-1 text-center text-neutral-900 dark:text-neutral-100">
-        {temperature.toFixed(1)}
+        {presencePenalty.toFixed(1)}
       </span>
       <input
         className="cursor-pointer"
         type="range"
-        min={0}
-        max={1}
+        min={-2}
+        max={2}
         step={0.1}
-        value={temperature}
+        value={presencePenalty}
         onChange={handleChange}
       />
      

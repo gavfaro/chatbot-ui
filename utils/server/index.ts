@@ -27,6 +27,10 @@ export const OpenAIStream = async (
   model: OpenAIModel,
   systemPrompt: string,
   temperature : number,
+  top_p: number,
+  frequency_penalty: number,
+  presence_penalty: number,
+  seed: number | null,
   key: string,
   messages: Message[],
 ) => {
@@ -58,6 +62,9 @@ export const OpenAIStream = async (
         ...messages,
       ],
       temperature: temperature,
+      top_p: top_p,
+      frequency_penalty: frequency_penalty,
+      presence_penalty: presence_penalty,
       stream: true,
     }),
   });

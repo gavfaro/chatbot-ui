@@ -1,4 +1,4 @@
-import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
+import { DEFAULT_FREQUENCY_PENALTY, DEFAULT_PRESENCE_PENALTY, DEFAULT_SEED, DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE, DEFAULT_TOPP } from '@/utils/app/const';
 import { OpenAIError, OpenAIStream } from '@/utils/server';
 
 import { ChatBody, Message } from '@/types/chat';
@@ -15,7 +15,7 @@ export const config = {
 
 const handler = async (req: Request): Promise<Response> => {
   try {
-    const { model, messages, key, prompt, temperature } = (await req.json()) as ChatBody;
+    const { model, messages, key, prompt, temperature, top_p, frequency_penalty, presence_penalty, seed } = (await req.json()) as ChatBody;
 
     await init((imports) => WebAssembly.instantiate(wasm, imports));
     const encoding = new Tiktoken(
@@ -32,6 +32,26 @@ const handler = async (req: Request): Promise<Response> => {
     let temperatureToUse = temperature;
     if (temperatureToUse == null) {
       temperatureToUse = DEFAULT_TEMPERATURE;
+    }
+
+    let topPToUse = top_p;
+    if (topPToUse == null) {
+      topPToUse = DEFAULT_TOPP;
+    }
+
+    let frequencyPenaltyToUse = frequency_penalty;
+    if (frequencyPenaltyToUse == null) {
+      frequencyPenaltyToUse = DEFAULT_FREQUENCY_PENALTY;
+    }
+
+    let presencePenaltyToUse = presence_penalty;
+    if (presencePenaltyToUse == null) {
+      presencePenaltyToUse = DEFAULT_PRESENCE_PENALTY;
+    }
+
+    let seedToUse = seed;
+    if (seedToUse == null) {
+      seedToUse = DEFAULT_SEED;
     }
 
     const prompt_tokens = encoding.encode(promptToSend);
@@ -52,7 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     encoding.free();
 
-    const stream = await OpenAIStream(model, promptToSend, temperatureToUse, key, messagesToSend);
+    const stream = await OpenAIStream(model, promptToSend, temperatureToUse, topPToUse, frequencyPenaltyToUse, presencePenaltyToUse, seedToUse, key, messagesToSend);
 
     return new Response(stream);
   } catch (error) {

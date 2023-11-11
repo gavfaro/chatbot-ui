@@ -8,6 +8,18 @@ export const OPENAI_API_HOST =
 export const DEFAULT_TEMPERATURE = 
   parseFloat(process.env.NEXT_PUBLIC_DEFAULT_TEMPERATURE || "1");
 
+  export const DEFAULT_TOPP = 
+  parseFloat(process.env.NEXT_PUBLIC_DEFAULT_TOP_P || "1");
+
+  export const DEFAULT_FREQUENCY_PENALTY = 
+  parseFloat(process.env.NEXT_PUBLIC_DEFAULT_FREQUENCY_PENALTY || "0");
+
+  export const DEFAULT_PRESENCE_PENALTY = 
+  parseFloat(process.env.NEXT_PUBLIC_DEFAULT_PRESENCE_PENALTY || "0");
+
+  export const DEFAULT_SEED = 
+  null
+
 export const OPENAI_API_TYPE =
   process.env.OPENAI_API_TYPE || 'openai';
 
