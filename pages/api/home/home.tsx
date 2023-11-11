@@ -15,7 +15,14 @@ import {
   cleanConversationHistory,
   cleanSelectedConversation,
 } from '@/utils/app/clean';
-import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
+import {
+  DEFAULT_FREQUENCY_PENALTY,
+  DEFAULT_PRESENCE_PENALTY,
+  DEFAULT_SEED,
+  DEFAULT_SYSTEM_PROMPT,
+  DEFAULT_TEMPERATURE,
+  DEFAULT_TOPP,
+} from '@/utils/app/const';
 import {
   saveConversation,
   saveConversations,
@@ -194,6 +201,12 @@ const Home = ({
       prompt: DEFAULT_SYSTEM_PROMPT,
       temperature: lastConversation?.temperature ?? DEFAULT_TEMPERATURE,
       folderId: null,
+      top_p: lastConversation?.top_p ?? DEFAULT_TOPP,
+      frequency_penalty:
+        lastConversation?.frequency_penalty ?? DEFAULT_FREQUENCY_PENALTY,
+      presence_penalty:
+        lastConversation?.presence_penalty ?? DEFAULT_PRESENCE_PENALTY,
+      seed: lastConversation?.seed ?? DEFAULT_SEED,
     };
 
     const updatedConversations = [...conversations, newConversation];
@@ -337,6 +350,12 @@ const Home = ({
           prompt: DEFAULT_SYSTEM_PROMPT,
           temperature: lastConversation?.temperature ?? DEFAULT_TEMPERATURE,
           folderId: null,
+          top_p: lastConversation?.top_p ?? DEFAULT_TOPP,
+          frequency_penalty:
+            lastConversation?.frequency_penalty ?? DEFAULT_FREQUENCY_PENALTY,
+          presence_penalty:
+            lastConversation?.presence_penalty ?? DEFAULT_PRESENCE_PENALTY,
+          seed: lastConversation?.seed ?? DEFAULT_SEED,
         },
       });
     }
